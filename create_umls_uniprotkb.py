@@ -48,7 +48,7 @@ with open("inputs/GeneProtein.txt","r") as f:
         ncbi2uniprot[x[0]] = x[1:]
 
 #NOW we want to get the UniProt for each UMLS protein
-with open("outputs/UMLS_UniProtKB","w") as f:
+with open("outputs/UMLS_UniProtKB.tsv","w") as f:
     f.write("UMLS_protein\tUMLS_gene\tNCBI_gene\tUniProtKB\n")
     for umlsprotein,umlsgenes in p2g.items():
         for umlsgene in umlsgenes:

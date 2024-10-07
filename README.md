@@ -24,3 +24,7 @@ Create the output mappings:
 ```
 python create_umls_uniprotkb.py
 ```
+
+This will create `outputs/UMLS_UniProtKB.tsv`, which contains the mappings described above.
+
+
