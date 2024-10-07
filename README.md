@@ -14,7 +14,7 @@ To run this, you need to put the following Babel files into `/inputs`, changing 
 | File | local name         |
 |------|--------------------|
 | UMLS synonyms            | UMLS\_synonyms     |
- | UniProtKB labels  |  UniProtKB\_labels  |
+| UniProtKB labels  |  UniProtKB\_labels  |
 | Gene Protein Conflation |  Gene\_Protein\_Conflation |
 | Gene Concordance |  Gene\_Concordance |
 
@@ -25,6 +25,36 @@ Create the output mappings:
 python create_umls_uniprotkb.py
 ```
 
-This will create `outputs/UMLS_UniProtKB.tsv`, which contains the mappings described above.
+This will create `outputs/UMLS_UniProtKB.tsv`, which contains the mappings described above. Note that there can be multiple UniProtKB mappings for a single UMLS Protein.
 
+## QC
+
+We generate mappings for over 13000 UMLS Proteins.  To check the mappings, we use an LLM to inspect the labels of the mapped proteins.
+
+First, convert the tsv to a jsonl and add the UMLS and UniProtKB labels:
+```
+python add_labels.py
+```
+
+Then, run the LLM:
+```
+export OPENAI_LITCOIN_KEY=<your key>
+python run_qc.py
+python parse_qc.py
+```
+
+This is going to run the QC on the mappings in batch mode using gpt-4o-mini.  In addition to generating a call for each UMLS/UniProtKB pair, it will also generate a specfied fraction of calls by permuting UMLS and UniProtKB identifiers. This allows us to see whether the QC is able to differntiate between (putatively) correct and (known) incorrect mappings.
+
+Now the noteboook `analyze_qc.ipynb` can be used to analyze the results of the QC.  In particular we can look at the distribution of scores for correct and incorrect mappings:
+
+| score | bad  | good |
+|-----|----|------|             
+|0  |      846 |    22 |
+|1  |      375 |    64 |
+|2  |       34 |    45 |
+|3  |       12 |    25 |
+|4  |       17 |   113 |
+|5  |       23 | 13478 |
+
+So the vast majority of putatively good mappings gat a score of 5 and the vast majority of known bad mappings get a score of 0 or 1.  Hand inspection of putatively good mappings with low scores appears to be due to the LLM failing rather than the mapping procedure.
 

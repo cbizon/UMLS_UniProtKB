@@ -17,8 +17,8 @@ with open("inputs/UniProtKB_labels","r") as inf:
         uniprot_labels[x[0]] = x[1]
 
 print("Write UMLS_UniProtKB_labels")
-with open("outputs/UMLS_UniProtKB","r") as inf, open("outputs/UMLS_UniProtKB_labels.jsonl","w") as outf:
-
+with open("outputs/UMLS_UniProtKB.tsv","r") as inf, open("outputs/UMLS_UniProtKB_labels.jsonl","w") as outf:
+    header = inf.readline()
     current_document = {"UMLS_id": None, "UMLS_Synonyms":[],  "UniProtKBs": []}
     for line in inf:
         x = line.strip().split('\t')
