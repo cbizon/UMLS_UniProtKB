@@ -1,5 +1,7 @@
 #!/bin/bash
 user='your_username'
+mkdir inputs
+mkdir outputs
 kubectl cp --context "$user@sterling" -n translator-dev babel:babel_downloads/UMLS/synonyms/ inputs/UMLS_synonyms
 kubectl cp --context "$user@sterling" --retries 999 -n translator-dev babel:babel_outputs/compendia/Gene.txt inputs/Gene.txt
 kubectl cp --context "$user@sterling" -n translator-dev babel:babel_outputs/conflation/GeneProtein.txt inputs/GeneProtein.txt
